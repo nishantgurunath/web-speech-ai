@@ -1,8 +1,6 @@
 'use strict';
 
 require('dotenv').config()
-// const CHAT_SONIC_API_TOKEN = process.env.CHAT_SONIC_API_TOKEN;
-// const APIAI_SESSION_ID = process.env.APIAI_SESSION_ID;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY
 
 const express = require('express');
@@ -19,11 +17,6 @@ const io = require('socket.io')(server);
 io.on('connection', function(socket){
   console.log('a user connected');
 });
-
-// const apiai = require('apiai')(APIAI_TOKEN);
-
-// const chatsonic_api = require('api')('@writesonic/v2.2#4enbxztlcbti48j');
-// chatsonic_api.auth(CHAT_SONIC_API_TOKEN);
 
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
@@ -69,6 +62,6 @@ io.on('connection', function(socket) {
       console.log(prompt)
       })
       .catch(err => console.error(err));
-      
+
   });
 });
