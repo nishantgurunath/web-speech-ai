@@ -44,13 +44,38 @@ io.on('connection', function(socket) {
 
     // Get a reply from API.ai
 
+    // let apiaiReq = apiai.textRequest(text, {
+    //   sessionId: APIAI_SESSION_ID
+    // });
+
+    // apiaiReq.on('response', (response) => {
+    //   let aiText = response.result.fulfillment.speech;
+    //   console.log('Bot reply: ' + aiText);
+    //   socket.emit('bot reply', aiText);
+    // });
+
+    // apiaiReq.on('error', (error) => {
+    //   console.log(error);
+    // });
+
+    // apiaiReq.end();
+
+    // chatsonic_api.chatsonic_V2BusinessContentChatsonic_post({
+    //   enable_google_results: 'true',
+    //   enable_memory: true,
+    //   input_text: text
+    //   }, {engine: 'premium', language: 'en'})
+    //   .then(({ data }) => {
+    //     console.log('Bot reply:' + data.message);
+    //     socket.emit('bot reply', data.message);
+    //   })
+    //   .catch(err => console.error(err));
     if (prompt) {
       prompt = prompt + "\n" + text;
     }
     else {
       prompt = text;
     }
-
     openai.createCompletion({
       model: "text-davinci-003",
       prompt: prompt,
@@ -69,6 +94,5 @@ io.on('connection', function(socket) {
       console.log(prompt)
       })
       .catch(err => console.error(err));
-      
   });
 });
