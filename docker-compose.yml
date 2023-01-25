@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+
+  conv-bot-service:
+    build:
+      context: ./
+    environment:
+      - PORT=8080
+    stdin_open: true
+    tty: true
+    container_name: "conv-bot-service"
+    hostname: "bot.local"
+    ports:
+      - 1234:8080
+    networks:
+      conv-bot-app:
+
+networks:
+  conv-bot-app:
+    external: true
