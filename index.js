@@ -16,6 +16,7 @@ const server = app.listen(process.env.PORT || 1234, () => {
 const io = require('socket.io')(server);
 io.on('connection', function(socket){
   console.log('a user connected');
+  prompt = ""
 });
 
 const { Configuration, OpenAIApi } = require("openai");
@@ -59,7 +60,7 @@ io.on('connection', function(socket) {
       console.log('Bot reply:' + data.choices[0].text);
       socket.emit('bot reply', data.choices[0].text);
       prompt = prompt + "\n" + data.choices[0].text;
-      console.log(prompt)
+      // console.log(prompt)
       })
       .catch(err => console.error(err));
 
