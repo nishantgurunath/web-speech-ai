@@ -27,6 +27,11 @@ const openai = new OpenAIApi(configuration);
 
 var prompt = ""
 
+// Health Check
+app.get('/health', (req, res) => {
+  res.status(200).json({ status: 'OK' });
+});
+
 // Web UI
 app.get('/', (req, res) => {
   res.sendFile('index.html');

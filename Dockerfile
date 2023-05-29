@@ -1,4 +1,4 @@
-FROM node:19
+FROM --platform=linux/amd64 node:19
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,6 +16,6 @@ RUN npm install api
 # Bundle app source
 COPY . .
 
-EXPOSE 1234
+EXPOSE 8080
 
 CMD [ "node", "index.js" ]
