@@ -49,6 +49,7 @@ data "aws_security_group" "load_balancer_sg" {
 
 resource "aws_ecr_repository" "ecr_repository" {
   name = var.image_repository_name
+  image_tag_mutability = "MUTABLE"
 }
 
 resource "aws_ecs_cluster" "ecs_cluster" {
@@ -63,16 +64,23 @@ resource "aws_lb_target_group" "target_group" {
   vpc_id      = data.aws_vpc.vpc.id
 
   health_check {
-    path     = "/health"
-    interval = 30
-    timeout  = 10
+    healthy_threshold   = "3"
+    interval            = "30"
+    protocol            = "HTTP"
+    matcher             = "200"
+    timeout             = "3"
+    path                = "/health"
+    unhealthy_threshold = "2"
   }
+
+  depends_on = [ aws_lb.load_balancer ]
 }
+
 
 resource "aws_lb" "load_balancer" {
   name               = "convBotLoadBalancerTf"
   internal           = false
-
+  load_balancer_type = "application"
   security_groups    = [data.aws_security_group.load_balancer_sg.id]
   subnets            = [
                           data.aws_subnet.subnet_1.id, 
@@ -82,6 +90,7 @@ resource "aws_lb" "load_balancer" {
                           data.aws_subnet.subnet_5.id,
                           data.aws_subnet.subnet_6.id,
                        ]
+  enable_deletion_protection = false
 }
 
 resource "aws_lb_listener" "listener" {
@@ -95,23 +104,23 @@ resource "aws_lb_listener" "listener" {
     target_group_arn = aws_lb_target_group.target_group.arn
   }
   certificate_arn = "arn:aws:acm:us-east-1:223658162111:certificate/644805dd-7c19-4523-9b95-f2ecbd123368"
+  depends_on = [ aws_lb.load_balancer, aws_lb_target_group.target_group ]
 }
 
+resource "aws_cloudwatch_log_group" "log_group" {
+  name = "/ecs/conv_bot_ecs_service"
+  retention_in_days = 30
+}
+
+resource "aws_cloudwatch_log_stream" "log_stream" {
+  name           = "conv-bot-ecs-service-stream"
+  log_group_name = aws_cloudwatch_log_group.log_group.name
+  depends_on = [ aws_cloudwatch_log_group.log_group ]
+}
 
 data "aws_ecr_authorization_token" "ecr_auth" {
   registry_id = aws_ecr_repository.ecr_repository.registry_id
 }
-
-resource "null_resource" "docker_image_push" {
-  provisioner "local-exec" {
-    command = <<EOT
-      echo ${data.aws_ecr_authorization_token.ecr_auth.authorization_token} | base64 --decode | cut -d':' -f2 | docker login --username AWS --password-stdin ${aws_ecr_repository.ecr_repository.repository_url}
-      docker build -t ${aws_ecr_repository.ecr_repository.repository_url}:latest ../
-      docker push ${aws_ecr_repository.ecr_repository.repository_url}:latest
-    EOT
-  }
-}
-
 
 output "ecr_repository_url" {
   value = aws_ecr_repository.ecr_repository.repository_url
@@ -138,5 +147,17 @@ output "ecs_subnet_ids" {
             data.aws_subnet.subnet_5.id,
             data.aws_subnet.subnet_6.id,
           ]
+}
+
+output "log_group_name" {
+  value = aws_cloudwatch_log_group.log_group.name
+}
+
+output "log_stream_name" {
+  value = aws_cloudwatch_log_stream.log_stream.name
+}
+
+output "ecr_authorization_token" {
+  value = data.aws_ecr_authorization_token.ecr_auth.authorization_token
 }
 
