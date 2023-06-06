@@ -25,7 +25,7 @@ jobs:
           terraform_version: 1.4.6
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -upgrade -backend-config="key=convbot/master/infra.tfstate"
         working-directory: ./infra
 
       - name: Terraform Validate
