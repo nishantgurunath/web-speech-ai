@@ -32,14 +32,10 @@ jobs:
         run: terraform validate
         working-directory: ./infra
 
-      - name: Terraform Import
-        run: terraform import
-        working-directory: ./infra
-
       - name: Terraform Plan
         run: terraform plan
         working-directory: ./infra
       
-      # - name: Terraform Apply
-      #   run: terraform apply -auto-approve
-      #   working-directory: ./infra
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
+        working-directory: ./infra
