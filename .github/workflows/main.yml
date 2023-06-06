@@ -22,10 +22,13 @@ jobs:
           terraform_version: 1.4.6
 
       - name: Terraform Init
-        run: terraform -chdir=../../infra init
+        run: terraform init
+        working-directory: ./infra
 
       - name: Terraform Plan
-        run: terraform -chdir=../../infra plan
+        run: terraform plan
+        working-directory: ./infra
       
       - name: Terraform Apply
-        run: terraform -chdir=../../infra apply
+        run: terraform apply
+        working-directory: ./infra
