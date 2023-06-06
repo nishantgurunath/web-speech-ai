@@ -14,15 +14,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY:  ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_DEFAULT_REGION: us-east-1
-      TF_LOG: TRACE
 
-    steps:
-      - name: Echo Environment Variables
-        run: |
-          echo "AWS_ACCESS_KEY_ID=${{ secrets.AWS_ACCESS_KEY_ID }}"
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.AWS_SECRET_ACCESS_KEY }}"
-          
+    steps:          
       - name: Checkout code
         uses: actions/checkout@v2
 
@@ -33,6 +26,10 @@ jobs:
 
       - name: Terraform Init
         run: terraform init
+        working-directory: ./infra
+
+      - name: Terraform Validate
+        run: terraform validate
         working-directory: ./infra
 
       - name: Terraform Plan
