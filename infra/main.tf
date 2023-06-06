@@ -73,8 +73,8 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       },
       "environment": [
         {
-          "name": "OPEN_API_KEY",
-          "value": "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"
+          "name": "OPENAI_API_KEY",
+          "value": var.OPENAI_API_KEY
         },
         {
           "name": "PORT",
@@ -98,7 +98,7 @@ resource "aws_ecs_service" "ecs_service" {
   network_configuration {
     security_groups = [module.static_module.ecs_load_balancer_sg_id]
     subnets         = module.static_module.ecs_subnet_ids
-    assign_public_ip = true
+    assign_public_ip = true #important for reasons to be figured out
   }
 
   load_balancer {
