@@ -2,6 +2,8 @@ module "static_module" {
   source = "./static/"
 }
 
+variable "openai_api_key" {}
+
 variable "container_name" {
   description = "Name of the ECS docker container"
   type        = string
@@ -74,7 +76,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
       "environment": [
         {
           "name": "OPENAI_API_KEY",
-          "value": var.OPENAI_API_KEY
+          "value": var.openai_api_key
         },
         {
           "name": "PORT",

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+      TF_VAR_openai_api_key: ${{ secrets.OPENAI_API_KEY }}
 
     steps:
       - name: Checkout code
@@ -22,10 +22,10 @@ jobs:
           terraform_version: 1.4.6
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform -chdir=../../infra init
 
       - name: Terraform Plan
-        run: terraform plan
+        run: terraform -chdir=../../infra plan
       
       - name: Terraform Apply
-        run: terraform apply
+        run: terraform -chdir=../../infra apply
