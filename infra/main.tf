@@ -29,6 +29,11 @@ variable "container_name" {
   default     = "conversation_bot_container_tf"
 }
 
+variable "image_uri" {
+  description = "Name of the ECR docker image"
+  type        = string
+}
+
 variable "ecs_service_name" {
   description = "Name of the ECS service"
   type        = string
@@ -59,7 +64,7 @@ resource "aws_ecs_task_definition" "ecs_task_definition" {
   [
     {
       "name": "${var.container_name}",
-      "image": "${module.static_module.ecr_repository_url}:latest",
+      "image": "${var.image_uri}",
       "portMappings": [
         {
           "containerPort": 80,
