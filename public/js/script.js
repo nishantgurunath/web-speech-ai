@@ -29,14 +29,11 @@ speechSynthesis.onvoiceschanged = () => {
   portugueseVoices = voices.filter(voice => (voice.lang.startsWith('pt') && voice.name.includes('Google')));
 }
 
-const startRecognition = () => {
+document.querySelector('button').addEventListener('click', () => {
   lang = document.getElementById('Language').value;
   recognition.lang = lang;
   recognition.start();
-};
-
-document.querySelector('button').addEventListener('mousedown', startRecognition);
-document.querySelector('button').addEventListener('touchstart', startRecognition);
+});
 
 recognition.addEventListener('speechstart', () => {
   console.log('Speech has been detected.');
@@ -54,12 +51,9 @@ recognition.addEventListener('result', (e) => {
   socket.emit('chat message', text);
 });
 
-const stopRecognition = () => {
-  recognition.stop();
-};
-
-document.querySelector('button').addEventListener("mouseup", stopRecognition);
-document.querySelector('button').addEventListener("touchend", stopRecognition);
+recognition.addEventListener('end', () => {
+    recognition.stop();
+});
 
 recognition.addEventListener('error', (e) => {
   outputBot.textContent = 'Error: ' + e.error;
@@ -96,8 +90,7 @@ function synthVoice(text, lang) {
 }
 
 socket.on('bot reply', function(replyText) {
-  // alert("Lang: " + lang)
+  if(replyText == '') replyText = "I couldn't hear you. Could you please repeat that?";
   synthVoice(replyText, lang);
-  if(replyText == '') replyText = "I couldn't hear you";
   outputBot.textContent = replyText;
 });
