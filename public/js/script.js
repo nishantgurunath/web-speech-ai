@@ -41,7 +41,6 @@ document.querySelector('button').addEventListener(clickEvent, () => {
   recognition.lang = lang;
   recognition.start();
   console.log(clickEvent + " detected")
-  console.log(hindiVoices)
 });
 
 recognition.addEventListener('speechstart', () => {
