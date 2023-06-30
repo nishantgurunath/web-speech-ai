@@ -14,6 +14,7 @@ recognition.lang = lang;
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
+const synth = window.speechSynthesis;
 var voices;
 var spanishVoices, germanVoices, italianVoices, dutchVoices;
 var hindiVoices, frenchVoices, portugueseVoices;
