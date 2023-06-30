@@ -16,7 +16,7 @@ const server = app.listen(process.env.PORT || 1234, () => {
 const io = require('socket.io')(server);
 io.on('connection', function(socket){
   console.log('a user connected');
-  prompt = ""
+  messages = []
 });
 
 const { Configuration, OpenAIApi } = require("openai");
@@ -25,7 +25,7 @@ const configuration = new Configuration({
   });
 const openai = new OpenAIApi(configuration);
 
-var prompt = ""
+var messages = []
 
 // Health Check
 app.get('/health', (req, res) => {
@@ -43,29 +43,20 @@ io.on('connection', function(socket) {
 
     // Get a reply from API.ai
 
-    if (prompt) {
-      prompt = prompt + "\n" + text;
-    }
-    else {
-      prompt = text;
-    }
+    messages.push({"role": "user", "content": text})
 
-    openai.createCompletion({
-      model: "text-davinci-003",
-      prompt: prompt,
+    openai.createChatCompletion({
+      model: "gpt-3.5-turbo",
+      messages: messages,
       temperature: 0.9,
       max_tokens: 150,
       top_p: 1,
-      // stop: ["Human", "AI", "Robot", "Computer"],
       frequency_penalty: 0,
-      presence_penalty: 0.6,
-      user: "Human",
-      best_of: 1
+      presence_penalty: 0,
     }).then(({ data }) => {
-      console.log('Bot reply:' + data.choices[0].text);
-      socket.emit('bot reply', data.choices[0].text);
-      prompt = prompt + "\n" + data.choices[0].text;
-      // console.log(prompt)
+      console.log('Bot reply:' + data.choices[0].message.content);
+      socket.emit('bot reply', data.choices[0].message.content);
+      messages.push({"role": "system", "content": data.choices[0].message.content})
       })
       .catch(err => console.error(err));
 

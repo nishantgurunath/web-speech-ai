@@ -50,7 +50,7 @@ recognition.addEventListener('result', (e) => {
 
   socket.emit('chat message', text);
 
-  recognition.stop();
+  // recognition.stop();
 });
 
 recognition.addEventListener('end', () => {
