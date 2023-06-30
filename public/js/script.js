@@ -49,6 +49,8 @@ recognition.addEventListener('result', (e) => {
   console.log('Confidence: ' + e.results[0][0].confidence);
 
   socket.emit('chat message', text);
+
+  recognition.stop();
 });
 
 recognition.addEventListener('end', () => {
