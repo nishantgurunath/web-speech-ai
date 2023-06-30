@@ -27,13 +27,16 @@ speechSynthesis.onvoiceschanged = () => {
   hindiVoices = voices.filter(voice => (voice.lang.startsWith('hi') && voice.name.includes('Google')));
   frenchVoices = voices.filter(voice => (voice.lang.startsWith('fr') && voice.name.includes('Google')));
   portugueseVoices = voices.filter(voice => (voice.lang.startsWith('pt') && voice.name.includes('Google')));
-} 
+}
 
-document.querySelector('button').addEventListener('click', () => {
+const startRecognition = () => {
   lang = document.getElementById('Language').value;
   recognition.lang = lang;
   recognition.start();
-});
+};
+
+document.querySelector('button').addEventListener('mousedown', startRecognition);
+document.querySelector('button').addEventListener('touchstart', startRecognition);
 
 recognition.addEventListener('speechstart', () => {
   console.log('Speech has been detected.');
@@ -51,9 +54,12 @@ recognition.addEventListener('result', (e) => {
   socket.emit('chat message', text);
 });
 
-recognition.addEventListener('speechend', () => {
+const stopRecognition = () => {
   recognition.stop();
-});
+};
+
+document.querySelector('button').addEventListener("mouseup", stopRecognition);
+document.querySelector('button').addEventListener("touchend", stopRecognition);
 
 recognition.addEventListener('error', (e) => {
   outputBot.textContent = 'Error: ' + e.error;
