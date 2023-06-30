@@ -29,10 +29,18 @@ speechSynthesis.onvoiceschanged = () => {
   portugueseVoices = voices.filter(voice => (voice.lang.startsWith('pt') && voice.name.includes('Google')));
 }
 
-document.querySelector('button').addEventListener('click', () => {
+var clickEvent = (function() {
+  if ('ontouchstart' in document.documentElement === true)
+    return 'touchstart';
+  else
+    return 'click';
+})(); 
+
+document.querySelector('button').addEventListener(clickEvent, () => {
   lang = document.getElementById('Language').value;
   recognition.lang = lang;
   recognition.start();
+  console.log(clickEvent + " detected")
 });
 
 recognition.addEventListener('speechstart', () => {
