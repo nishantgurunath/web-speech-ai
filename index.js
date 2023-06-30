@@ -45,7 +45,7 @@ io.on('connection', function(socket) {
     console.log('Message: ' + lang);
 
     if (lang == "hi-IN")
-      max_tokens = 128;
+      max_tokens = 192;
     else
       max_tokens = 128;
     // Get a reply from API.ai
