@@ -26,6 +26,7 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 var messages = []
+var max_tokens;
 
 // Health Check
 app.get('/health', (req, res) => {
@@ -38,9 +39,15 @@ app.get('/', (req, res) => {
 });
 
 io.on('connection', function(socket) {
-  socket.on('chat message', (text) => {
+  socket.on('chat message', (message) => {
+    const [text, lang] = message.values
     console.log('Message: ' + text);
+    console.log('Message: ' + lang);
 
+    if (lang == "hi-IN")
+      max_tokens = 128;
+    else
+      max_tokens = 128;
     // Get a reply from API.ai
 
     messages.push({"role": "user", "content": text})
@@ -49,7 +56,7 @@ io.on('connection', function(socket) {
       model: "gpt-3.5-turbo",
       messages: messages,
       temperature: 0.9,
-      max_tokens: 150,
+      max_tokens: max_tokens,
       top_p: 1,
       frequency_penalty: 0,
       presence_penalty: 0,

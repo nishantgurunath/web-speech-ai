@@ -56,12 +56,13 @@ recognition.addEventListener('result', (e) => {
   outputYou.textContent = text;
   console.log('Confidence: ' + e.results[0][0].confidence);
 
-  socket.emit('chat message', text);
+  const tuple = [text, lang];
+  socket.emit('chat message', {values: tuple});
 
   // recognition.stop();
 });
 
-recognition.addEventListener('end', () => {
+recognition.addEventListener('speechend', () => {
     recognition.stop();
 });
 
