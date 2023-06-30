@@ -14,7 +14,6 @@ recognition.lang = lang;
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
-const synth = window.speechSynthesis;
 var voices;
 var spanishVoices, germanVoices, italianVoices, dutchVoices;
 var hindiVoices, frenchVoices, portugueseVoices;
@@ -70,6 +69,7 @@ recognition.addEventListener('error', (e) => {
 });
 
 function synthVoice(text, lang) {
+  const synth = window.speechSynthesis;
   const utterance = new SpeechSynthesisUtterance();
   utterance.text = text;
   utterance.lang = lang;
