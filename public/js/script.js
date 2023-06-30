@@ -14,6 +14,7 @@ recognition.lang = lang;
 recognition.interimResults = false;
 recognition.maxAlternatives = 1;
 
+const synth = window.speechSynthesis;
 var voices;
 var spanishVoices, germanVoices, italianVoices, dutchVoices;
 var hindiVoices, frenchVoices, portugueseVoices;
@@ -40,6 +41,7 @@ document.querySelector('button').addEventListener(clickEvent, () => {
   recognition.lang = lang;
   recognition.start();
   console.log(clickEvent + " detected")
+  console.log(hindiVoices)
 });
 
 recognition.addEventListener('speechstart', () => {
